@@ -1,0 +1,36 @@
+services:
+  telemt:
+    image: whn0thacked/telemt-docker:latest
+    container_name: telemt
+    restart: unless-stopped
+    environment:
+      RUST_LOG: "warn"   # "info" for verbose logs, "warn" for errors only
+    volumes:
+      - ./telemt.toml:/etc/telemt.toml:ro
+    ports:
+      # Bind to localhost only — nginx is the only entry point
+      - "127.0.0.1:8443:8443/tcp"
+      - "127.0.0.1:9090:9090/tcp"
+    ulimits:
+      nofile:
+        soft: 65536   # Default 1024 is too low for a proxy under load
+        hard: 65536
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    read_only: true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,size=16m
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 256M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

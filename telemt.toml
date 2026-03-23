@@ -1,0 +1,40 @@
+show_link = ["docker"]
+
+[general]
+prefer_ipv6 = false
+fast_mode = true
+use_middle_proxy = true
+ad_tag = "YOUR_PROXY_TAG"   # get from @MTProxyBot → /newproxy → copy the tag
+
+[general.modes]
+classic = false
+secure = true   # DD-mode: random-looking traffic, bypasses Megafon/TSPU on port 3389
+tls = true      # EE-mode: fake-TLS with SNI mask, works on most ISPs via port 443
+
+[server]
+port = 8443
+listen_addr_ipv4 = "0.0.0.0"
+
+[censorship]
+tls_domain = "ozon.ru"   # SNI mask domain — change if needed
+mask = true
+mask_port = 443
+tls_emulation = true
+tls_front_dir = "/tmp/tlsfront"
+
+[access]
+replay_check_len = 65536
+ignore_time_skew = false
+
+[access.users]
+# username = "YOUR_32_CHAR_HEX_SECRET"
+# Generate: openssl rand -hex 16
+myproxy = "YOUR_32_CHAR_HEX_SECRET"
+
+[dc_overrides]
+"203" = "91.105.192.100:443"   # Telegram CDN override for DC203
+
+[[upstreams]]
+type = "direct"
+enabled = true
+weight = 10

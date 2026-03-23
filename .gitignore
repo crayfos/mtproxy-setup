@@ -1,0 +1,7 @@
+# Never commit actual secrets
+*.key
+*.pem
+.env
+
+# OS
+.DS_Store
